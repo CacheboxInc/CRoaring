@@ -88,6 +88,12 @@ class Roaring {
         return ans;
     }
 
+    roaring_statistics_t getStats() {
+        roaring_statistics_t stats;
+        roaring_bitmap_statistics(&roaring, &stats);
+        return stats;
+    }
+
     /**
      * Add value x
      *
