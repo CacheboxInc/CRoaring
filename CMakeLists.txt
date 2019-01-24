@@ -11,7 +11,7 @@ project(RoaringBitmap)
 set(ROARING_LIB_NAME roaring)
 
 option(DISABLE_X64 "Forcefully disable x64 optimizations even if hardware supports it (this disables AVX) " OFF)
-option(DISABLE_AVX "Forcefully disable AVX even if hardware supports it" OFF)
+option(DISABLE_AVX "Forcefully disable AVX even if hardware supports it" ON)
 
 IF(${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
 SET(DISABLE_AVX ON) # for ARM processors, there is no hope of having AVX support
