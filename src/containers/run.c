@@ -116,7 +116,7 @@ void run_container_free(run_container_t *run) {
 }
 
 #ifdef USEAVX
-
+_Static_assert (0, "assert1");
 /* Get the cardinality of `run'. Requires an actual computation. */
 int run_container_cardinality(const run_container_t *run) {
     const int32_t n_runs = run->n_runs;
@@ -148,6 +148,7 @@ int run_container_cardinality(const run_container_t *run) {
 
 #else
 
+_Static_assert (0, "assert2");
 /* Get the cardinality of `run'. Requires an actual computation. */
 int run_container_cardinality(const run_container_t *run) {
     const int32_t n_runs = run->n_runs;
