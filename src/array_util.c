@@ -8,8 +8,9 @@
 #include <roaring/array_util.h>
 #include <roaring/portability.h>
 #include <roaring/utilasm.h>
-extern inline int32_t binarySearch(const uint16_t *array, int32_t lenarray,
-                                   uint16_t ikey);
+
+//extern inline int32_t binarySearch(const uint16_t *array, int32_t lenarray,
+//                                   uint16_t ikey);
 
 #ifdef USESSE4
 // used by intersect_vector16

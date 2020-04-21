@@ -19,13 +19,13 @@ extern int bitset_container_cardinality(const bitset_container_t *bitset);
 extern bool bitset_container_nonzero_cardinality(bitset_container_t *bitset);
 extern void bitset_container_set(bitset_container_t *bitset, uint16_t pos);
 extern void bitset_container_unset(bitset_container_t *bitset, uint16_t pos);
-extern inline bool bitset_container_get(const bitset_container_t *bitset,
-                                        uint16_t pos);
+//extern inline bool bitset_container_get(const bitset_container_t *bitset,
+//                                        uint16_t pos);
 extern int32_t bitset_container_serialized_size_in_bytes();
 extern bool bitset_container_add(bitset_container_t *bitset, uint16_t pos);
 extern bool bitset_container_remove(bitset_container_t *bitset, uint16_t pos);
-extern inline bool bitset_container_contains(const bitset_container_t *bitset,
-                                             uint16_t pos);
+//extern inline bool bitset_container_contains(const bitset_container_t *bitset,
+//                                             uint16_t pos);
 
 void bitset_container_clear(bitset_container_t *bitset) {
     memset(bitset->array, 0, sizeof(uint64_t) * BITSET_CONTAINER_SIZE_IN_WORDS);

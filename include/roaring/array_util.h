@@ -42,17 +42,20 @@ inline int32_t binarySearch(const uint16_t *array, int32_t lenarray,
 static inline int32_t advanceUntil(const uint16_t *array, int32_t pos,
                                    int32_t length, uint16_t min) {
     int32_t lower = pos + 1;
+    int32_t spansize;
+    int32_t upper;
+    int32_t mid;
 
     if ((lower >= length) || (array[lower] >= min)) {
         return lower;
     }
 
-    int32_t spansize = 1;
+    spansize = 1;
 
     while ((lower + spansize < length) && (array[lower + spansize] < min)) {
         spansize <<= 1;
     }
-    int32_t upper = (lower + spansize < length) ? lower + spansize : length - 1;
+    upper = (lower + spansize < length) ? lower + spansize : length - 1;
 
     if (array[upper] == min) {
         return upper;
@@ -70,7 +73,7 @@ static inline int32_t advanceUntil(const uint16_t *array, int32_t pos,
     // we know that the next-smallest span was too small
     lower += (spansize >> 1);
 
-    int32_t mid = 0;
+    mid = 0;
     while (lower + 1 != upper) {
         mid = (lower + upper) >> 1;
         if (array[mid] == min) {

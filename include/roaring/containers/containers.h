@@ -269,21 +269,22 @@ static inline int container_shrink_to_fit(void *container, uint8_t typecode) {
     distance k*step from min. */
 static inline void *container_from_range(uint8_t *type, uint32_t min,
                                          uint32_t max, uint16_t step) {
+    int size;
     if (step == 0) return NULL;  // being paranoid
     if (step == 1) {
         *type = RUN_CONTAINER_TYPE_CODE;
         return run_container_create_range(min, max);
     }
-    int size = (max - min + step - 1) / step;
+    size = (max - min + step - 1) / step;
     if (size <= DEFAULT_MAX_SIZE) {  // array container
-        *type = ARRAY_CONTAINER_TYPE_CODE;
         array_container_t *array = array_container_create_given_capacity(size);
+        *type = ARRAY_CONTAINER_TYPE_CODE;
         array_container_add_from_range(array, min, max, step);
         assert(array->cardinality == size);
         return array;
     } else {  // bitset container
-        *type = BITSET_CONTAINER_TYPE_CODE;
         bitset_container_t *bitset = bitset_container_create();
+        *type = BITSET_CONTAINER_TYPE_CODE;
         bitset_container_add_from_range(bitset, min, max, step);
         assert(bitset->cardinality == size);
         return bitset;
@@ -295,9 +296,9 @@ static inline void *container_from_range(uint8_t *type, uint32_t min,
  */
 static inline void *container_repair_after_lazy(void *container,
                                                 uint8_t *typecode) {
+    void *result = NULL;
     container = get_writable_copy_if_shared(
         container, typecode);  // TODO: this introduces unnecessary cloning
-    void *result = NULL;
     switch (*typecode) {
         case BITSET_CONTAINER_TYPE_CODE:
             ((bitset_container_t *)container)->cardinality =
@@ -649,9 +650,9 @@ static inline bool container_is_subset(const void *c1, uint8_t type1,
  */
 static inline void *container_and(const void *c1, uint8_t type1, const void *c2,
                                   uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -841,9 +842,9 @@ static inline bool container_intersect(const void *c1, uint8_t type1, const void
 */
 static inline void *container_iand(void *c1, uint8_t type1, const void *c2,
                                    uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -931,9 +932,9 @@ static inline void *container_iand(void *c1, uint8_t type1, const void *c2,
  */
 static inline void *container_or(const void *c1, uint8_t type1, const void *c2,
                                  uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1041,9 +1042,9 @@ static inline void *container_or(const void *c1, uint8_t type1, const void *c2,
 static inline void *container_lazy_or(const void *c1, uint8_t type1,
                                       const void *c2, uint8_t type2,
                                       uint8_t *result_type) {
+    void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1153,9 +1154,9 @@ static inline void *container_lazy_or(const void *c1, uint8_t type1,
 */
 static inline void *container_ior(void *c1, uint8_t type1, const void *c2,
                                   uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1264,10 +1265,10 @@ static inline void *container_ior(void *c1, uint8_t type1, const void *c2,
 */
 static inline void *container_lazy_ior(void *c1, uint8_t type1, const void *c2,
                                        uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     assert(type1 != SHARED_CONTAINER_TYPE_CODE);
     // c1 = get_writable_copy_if_shared(c1,&type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1380,9 +1381,9 @@ static inline void *container_lazy_ior(void *c1, uint8_t type1, const void *c2,
  */
 static inline void *container_xor(const void *c1, uint8_t type1, const void *c2,
                                   uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1471,9 +1472,9 @@ static inline void *container_xor(const void *c1, uint8_t type1, const void *c2,
 static inline void *container_lazy_xor(const void *c1, uint8_t type1,
                                        const void *c2, uint8_t type2,
                                        uint8_t *result_type) {
+    void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1566,9 +1567,9 @@ static inline void *container_lazy_xor(const void *c1, uint8_t type1,
 */
 static inline void *container_ixor(void *c1, uint8_t type1, const void *c2,
                                    uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1691,9 +1692,9 @@ static inline void *container_lazy_ixor(void *c1, uint8_t type1, const void *c2,
 static inline void *container_andnot(const void *c1, uint8_t type1,
                                      const void *c2, uint8_t type2,
                                      uint8_t *result_type) {
+    void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1799,9 +1800,9 @@ static inline void *container_andnot(const void *c1, uint8_t type1,
 */
 static inline void *container_iandnot(void *c1, uint8_t type1, const void *c2,
                                       uint8_t type2, uint8_t *result_type) {
+    void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
-    void *result = NULL;
     switch (CONTAINER_PAIR(type1, type2)) {
         case CONTAINER_PAIR(BITSET_CONTAINER_TYPE_CODE,
                             BITSET_CONTAINER_TYPE_CODE):
@@ -1931,8 +1932,8 @@ static inline bool container_iterate64(const void *container, uint8_t typecode,
 
 static inline void *container_not(const void *c, uint8_t typ,
                                   uint8_t *result_type) {
-    c = container_unwrap_shared(c, &typ);
     void *result = NULL;
+    c = container_unwrap_shared(c, &typ);
     switch (typ) {
         case BITSET_CONTAINER_TYPE_CODE:
             *result_type = bitset_container_negation(
@@ -1964,8 +1965,8 @@ static inline void *container_not_range(const void *c, uint8_t typ,
                                         uint32_t range_start,
                                         uint32_t range_end,
                                         uint8_t *result_type) {
-    c = container_unwrap_shared(c, &typ);
     void *result = NULL;
+    c = container_unwrap_shared(c, &typ);
     switch (typ) {
         case BITSET_CONTAINER_TYPE_CODE:
             *result_type =
@@ -1996,8 +1997,8 @@ static inline void *container_not_range(const void *c, uint8_t typ,
 }
 
 static inline void *container_inot(void *c, uint8_t typ, uint8_t *result_type) {
-    c = get_writable_copy_if_shared(c, &typ);
     void *result = NULL;
+    c = get_writable_copy_if_shared(c, &typ);
     switch (typ) {
         case BITSET_CONTAINER_TYPE_CODE:
             *result_type = bitset_container_negation_inplace(
@@ -2031,8 +2032,8 @@ static inline void *container_inot_range(void *c, uint8_t typ,
                                          uint32_t range_start,
                                          uint32_t range_end,
                                          uint8_t *result_type) {
-    c = get_writable_copy_if_shared(c, &typ);
     void *result = NULL;
+    c = get_writable_copy_if_shared(c, &typ);
     switch (typ) {
         case BITSET_CONTAINER_TYPE_CODE:
             *result_type =

@@ -258,6 +258,8 @@ static inline void array_container_append(array_container_t *arr,
 /* Add x to the set. Returns true if x was not already present.  */
 static inline bool array_container_add(array_container_t *arr, uint16_t pos) {
     const int32_t cardinality = arr->cardinality;
+    int32_t loc;
+    bool not_found;
 
     // best case, we can append.
     if (array_container_empty(arr) || (arr->array[cardinality - 1] < pos)) {
@@ -265,14 +267,15 @@ static inline bool array_container_add(array_container_t *arr, uint16_t pos) {
         return true;
     }
 
-    const int32_t loc = binarySearch(arr->array, cardinality, pos);
-    const bool not_found = loc < 0;
+    loc = binarySearch(arr->array, cardinality, pos);
+    not_found = loc < 0;
 
     if (not_found) {
+        int32_t insert_idx;
         if (array_container_full(arr)) {
             array_container_grow(arr, arr->capacity + 1, INT32_MAX, true);
         }
-        const int32_t insert_idx = -loc - 1;
+        insert_idx = -loc - 1;
         memmove(arr->array + insert_idx + 1, arr->array + insert_idx,
                 (cardinality - insert_idx) * sizeof(uint16_t));
         arr->array[insert_idx] = pos;
@@ -304,6 +307,8 @@ inline bool array_container_contains(const array_container_t *arr,
     int32_t low = 0;
     const uint16_t * carr = (const uint16_t *) arr->array;
     int32_t high = arr->cardinality - 1;
+    int i = 0;
+
     //    while (high - low >= 0) {
     while(high >= low + 16) {
         int32_t middleIndex = (low + high)>>1;
@@ -317,7 +322,7 @@ inline bool array_container_contains(const array_container_t *arr,
         }
     }
 
-    for (int i=low; i <= high; i++) {
+    for (i=low; i <= high; i++) {
         uint16_t v = carr[i];
         if (v == pos) {
             return true;

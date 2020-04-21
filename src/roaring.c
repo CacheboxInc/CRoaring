@@ -7,10 +7,12 @@
 #include <stdio.h>
 #include <string.h>
 
+/*
 extern inline bool roaring_bitmap_contains(const roaring_bitmap_t *r,
                                            uint32_t val);
 extern inline bool roaring_bitmap_is_strict_subset(const roaring_bitmap_t *ra1,
                                                    const roaring_bitmap_t *ra2);
+*/
 
 // this is like roaring_bitmap_add, but it populates pointer arguments in such a
 // way
@@ -353,7 +355,7 @@ void roaring_bitmap_remove(roaring_bitmap_t *r, uint32_t val) {
     }
 }
 
-extern bool roaring_bitmap_contains(const roaring_bitmap_t *r, uint32_t val);
+//extern bool roaring_bitmap_contains(const roaring_bitmap_t *r, uint32_t val);
 
 // there should be some SIMD optimizations possible here
 roaring_bitmap_t *roaring_bitmap_and(const roaring_bitmap_t *x1,

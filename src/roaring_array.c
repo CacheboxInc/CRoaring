@@ -11,6 +11,7 @@
 // Convention: [0,ra->size) all elements are initialized
 //  [ra->size, ra->allocation_size) is junk and contains nothing needing freeing
 
+/*
 extern inline int32_t ra_get_size(const roaring_array_t *ra);
 extern inline int32_t ra_get_index(const roaring_array_t *ra, uint16_t x);
 extern inline void *ra_get_container_at_index(const roaring_array_t *ra,
@@ -24,6 +25,7 @@ extern inline void ra_replace_key_and_container_at_index(roaring_array_t *ra,
 extern inline void ra_set_container_at_index(const roaring_array_t *ra,
                                              int32_t i, void *c,
                                              uint8_t typecode);
+*/
 
 #define INITIAL_CAPACITY 4
 
@@ -327,8 +329,8 @@ void *ra_get_container(roaring_array_t *ra, uint16_t x, uint8_t *typecode) {
     return ra->containers[i];
 }
 
-extern void *ra_get_container_at_index(const roaring_array_t *ra, uint16_t i,
-                                       uint8_t *typecode);
+//extern void *ra_get_container_at_index(const roaring_array_t *ra, uint16_t i,
+//                                       uint8_t *typecode);
 
 void *ra_get_writable_container(roaring_array_t *ra, uint16_t x,
                                 uint8_t *typecode) {
@@ -349,7 +351,7 @@ uint16_t ra_get_key_at_index(const roaring_array_t *ra, uint16_t i) {
     return ra->keys[i];
 }
 
-extern int32_t ra_get_index(const roaring_array_t *ra, uint16_t x);
+//extern int32_t ra_get_index(const roaring_array_t *ra, uint16_t x);
 
 extern int32_t ra_advance_until(const roaring_array_t *ra, uint16_t x,
                                 int32_t pos);

@@ -4,6 +4,7 @@
 #include <roaring/containers/run.h>
 #include <roaring/portability.h>
 
+/*
 extern inline uint16_t run_container_minimum(const run_container_t *run);
 extern inline uint16_t run_container_maximum(const run_container_t *run);
 extern inline int32_t interleavedBinarySearch(const rle16_t *array,
@@ -11,6 +12,7 @@ extern inline int32_t interleavedBinarySearch(const rle16_t *array,
 extern inline bool run_container_contains(const run_container_t *run,
                                           uint16_t pos);
 extern inline int run_container_index_equalorlarger(const run_container_t *arr, uint16_t x);
+*/
 extern bool run_container_is_full(const run_container_t *run);
 extern bool run_container_nonzero_cardinality(const run_container_t *r);
 extern void run_container_clear(run_container_t *run);

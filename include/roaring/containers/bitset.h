@@ -227,8 +227,9 @@ static inline bool bitset_container_nonzero_cardinality(
  *  it never modifies the bitset struct. */
 static inline bool bitset_container_empty(
     const bitset_container_t *bitset) {
+  int i = 0;
   if (bitset->cardinality == BITSET_UNKNOWN_CARDINALITY) {
-      for (int i = 0; i < BITSET_CONTAINER_SIZE_IN_WORDS; i ++) {
+      for (i = 0; i < BITSET_CONTAINER_SIZE_IN_WORDS; i ++) {
           if((bitset->array[i]) != 0) return false;
       }
       return true;

@@ -142,11 +142,13 @@ static inline bool run_container_remove(run_container_t *run, uint16_t pos) {
         int32_t offset = pos - run->runs[index].value;
         int32_t le = run->runs[index].length;
         if (offset < le) {
+            uint16_t newvalue;
+            int32_t newlength;
             // need to break in two
             run->runs[index].length = (uint16_t)(offset - 1);
             // need to insert
-            uint16_t newvalue = pos + 1;
-            int32_t newlength = le - offset - 1;
+            newvalue = pos + 1;
+            newlength = le - offset - 1;
             makeRoomAtIndex(run, (uint16_t)(index + 1));
             run->runs[index + 1].value = newvalue;
             run->runs[index + 1].length = (uint16_t)newlength;

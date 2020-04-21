@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
 extern inline uint16_t array_container_minimum(const array_container_t *arr);
 extern inline uint16_t array_container_maximum(const array_container_t *arr);
 extern inline int array_container_index_equalorlarger(const array_container_t *arr, uint16_t x);
@@ -16,6 +17,7 @@ extern inline int array_container_rank(const array_container_t *arr,
                                        uint16_t x);
 extern inline bool array_container_contains(const array_container_t *arr,
                                             uint16_t pos);
+*/
 extern int array_container_cardinality(const array_container_t *array);
 extern bool array_container_nonzero_cardinality(const array_container_t *array);
 extern void array_container_clear(array_container_t *array);

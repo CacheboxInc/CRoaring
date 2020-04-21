@@ -1,10 +1,12 @@
 
 #include <roaring/containers/containers.h>
 
+/*
 extern inline const void *container_unwrap_shared(
     const void *candidate_shared_container, uint8_t *type);
 extern inline void *container_mutable_unwrap_shared(
     void *candidate_shared_container, uint8_t *type);
+*/
 
 extern const char *get_container_name(uint8_t typecode);
 
@@ -149,8 +151,8 @@ extern int container_to_uint32_array(uint32_t *output, const void *container,
 extern void *container_add(void *container, uint16_t val, uint8_t typecode,
                            uint8_t *new_typecode);
 
-extern inline bool container_contains(const void *container, uint16_t val,
-                                      uint8_t typecode);
+//extern inline bool container_contains(const void *container, uint16_t val,
+//                                      uint8_t typecode);
 
 extern void *container_clone(const void *container, uint8_t typecode);
 

@@ -13,12 +13,14 @@
 #define __STDC_FORMAT_MACROS 1
 #endif
 
+/*
 #if !(defined(_POSIX_C_SOURCE)) || (_POSIX_C_SOURCE < 200809L)
 #define _POSIX_C_SOURCE 200809L
 #endif
 #if !(defined(_XOPEN_SOURCE)) || (_XOPEN_SOURCE < 700)
 #define _XOPEN_SOURCE 700
 #endif
+*/
 
 #include <stdbool.h>
 #include <stdint.h>
