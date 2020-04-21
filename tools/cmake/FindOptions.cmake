@@ -38,7 +38,7 @@ endif()
 
 if(NOT MSVC)
 ##set(STD_FLAGS "-std=c11 -fPIC")
-set(STD_FLAGS "-std=c99 -fPIC")
+set(STD_FLAGS "-std=c99 -fPIC -m32")
 set(CXXSTD_FLAGS "-std=c++11 -fPIC")
 endif()
 

@@ -71,6 +71,7 @@
 // if we have __SSE4_2__, we enable SSE4
 #if (defined(__POPCNT__)) && (defined(__SSE4_2__))
 #define USESSE4
+#undef USESSE4
 #endif
 
 #if defined(USEAVX) || defined(__x86_64__) || defined(_M_X64)
