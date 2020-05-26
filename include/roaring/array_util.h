@@ -14,7 +14,7 @@
  *     if ( x<0 ) then inserting ikey at position -x-1 in array (insuring that array[-x-1]=ikey)
  *                   keys the array sorted.
  */
-int32_t binarySearch(const uint16_t *array, int32_t lenarray,
+inline int32_t binarySearch(const uint16_t *array, int32_t lenarray,
                             uint16_t ikey) {
     int32_t low = 0;
     int32_t high = lenarray - 1;
@@ -39,7 +39,7 @@ int32_t binarySearch(const uint16_t *array, int32_t lenarray,
  *    are smaller than min.
  * otherwise returns the first index x such that array[x] >= min.
  */
-static  int32_t advanceUntil(const uint16_t *array, int32_t pos,
+static inline int32_t advanceUntil(const uint16_t *array, int32_t pos,
                                    int32_t length, uint16_t min) {
     int32_t lower = pos + 1;
     int32_t spansize;
