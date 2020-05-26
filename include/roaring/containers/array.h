@@ -57,11 +57,11 @@ uint32_t array_container_serialization_len(const array_container_t *container);
 void *array_container_deserialize(const char *buf, size_t buf_len);
 
 /* Get the cardinality of `array'. */
-static inline int array_container_cardinality(const array_container_t *array) {
+static  int array_container_cardinality(const array_container_t *array) {
     return array->cardinality;
 }
 
-static inline bool array_container_nonzero_cardinality(
+static  bool array_container_nonzero_cardinality(
     const array_container_t *array) {
     return array->cardinality > 0;
 }
@@ -76,15 +76,15 @@ void array_container_add_from_range(array_container_t *arr, uint32_t min,
                                     uint32_t max, uint16_t step);
 
 /* Set the cardinality to zero (does not release memory). */
-static inline void array_container_clear(array_container_t *array) {
+static  void array_container_clear(array_container_t *array) {
     array->cardinality = 0;
 }
 
-static inline bool array_container_empty(const array_container_t *array) {
+static  bool array_container_empty(const array_container_t *array) {
     return array->cardinality == 0;
 }
 
-static inline bool array_container_full(const array_container_t *array) {
+static  bool array_container_full(const array_container_t *array) {
     return array->cardinality == array->capacity;
 }
 
@@ -150,7 +150,7 @@ void array_container_printf_as_uint32_array(const array_container_t *v,
 /**
  * Return the serialized size in bytes of a container having cardinality "card".
  */
-static inline int32_t array_container_serialized_size_in_bytes(int32_t card) {
+static  int32_t array_container_serialized_size_in_bytes(int32_t card) {
     return card * 2 + 2;
 }
 
@@ -198,7 +198,7 @@ int32_t array_container_read(int32_t cardinality, array_container_t *container,
  * that the cardinality of the container is already known.
  *
  */
-static inline int32_t array_container_size_in_bytes(
+static  int32_t array_container_size_in_bytes(
     const array_container_t *container) {
     return container->cardinality * sizeof(uint16_t);
 }
@@ -221,7 +221,7 @@ bool array_container_is_subset(const array_container_t *container1,
  * accordingly.
  * Otherwise, it returns false and update start_rank.
  */
-static inline bool array_container_select(const array_container_t *container,
+static  bool array_container_select(const array_container_t *container,
                                           uint32_t *start_rank, uint32_t rank,
                                           uint32_t *element) {
     int card = array_container_cardinality(container);
@@ -244,7 +244,7 @@ void array_container_andnot(const array_container_t *array_1,
 
 /* Append x to the set. Assumes that the value is larger than any preceding
  * values.  */
-static inline void array_container_append(array_container_t *arr,
+static  void array_container_append(array_container_t *arr,
                                           uint16_t pos) {
     const int32_t capacity = arr->capacity;
 
@@ -256,7 +256,7 @@ static inline void array_container_append(array_container_t *arr,
 }
 
 /* Add x to the set. Returns true if x was not already present.  */
-static inline bool array_container_add(array_container_t *arr, uint16_t pos) {
+static  bool array_container_add(array_container_t *arr, uint16_t pos) {
     const int32_t cardinality = arr->cardinality;
     int32_t loc;
     bool not_found;
@@ -286,7 +286,7 @@ static inline bool array_container_add(array_container_t *arr, uint16_t pos) {
 }
 
 /* Remove x from the set. Returns true if x was present.  */
-static inline bool array_container_remove(array_container_t *arr,
+static  bool array_container_remove(array_container_t *arr,
                                           uint16_t pos) {
     const int32_t idx = binarySearch(arr->array, arr->cardinality, pos);
     const bool is_present = idx >= 0;
@@ -300,7 +300,7 @@ static inline bool array_container_remove(array_container_t *arr,
 }
 
 /* Check whether x is present.  */
-inline bool array_container_contains(const array_container_t *arr,
+bool array_container_contains(const array_container_t *arr,
                                      uint16_t pos) {
     //    return binarySearch(arr->array, arr->cardinality, pos) >= 0;
     // binary search with fallback to linear search for short ranges
@@ -334,19 +334,19 @@ inline bool array_container_contains(const array_container_t *arr,
 }
 
 /* Returns the smallest value (assumes not empty) */
-inline uint16_t array_container_minimum(const array_container_t *arr) {
+uint16_t array_container_minimum(const array_container_t *arr) {
     if (arr->cardinality == 0) return 0;
     return arr->array[0];
 }
 
 /* Returns the largest value (assumes not empty) */
-inline uint16_t array_container_maximum(const array_container_t *arr) {
+uint16_t array_container_maximum(const array_container_t *arr) {
     if (arr->cardinality == 0) return 0;
     return arr->array[arr->cardinality - 1];
 }
 
 /* Returns the number of values equal or smaller than x */
-inline int array_container_rank(const array_container_t *arr, uint16_t x) {
+int array_container_rank(const array_container_t *arr, uint16_t x) {
     const int32_t idx = binarySearch(arr->array, arr->cardinality, x);
     const bool is_present = idx >= 0;
     if (is_present) {
@@ -357,7 +357,7 @@ inline int array_container_rank(const array_container_t *arr, uint16_t x) {
 }
 
 /* Returns the index of the first value equal or smaller than x, or -1 */
-inline int array_container_index_equalorlarger(const array_container_t *arr, uint16_t x) {
+int array_container_index_equalorlarger(const array_container_t *arr, uint16_t x) {
     const int32_t idx = binarySearch(arr->array, arr->cardinality, x);
     const bool is_present = idx >= 0;
     if (is_present) {

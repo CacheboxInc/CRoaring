@@ -70,7 +70,7 @@ void *shared_container_extract_copy(shared_container_t *container,
                                     uint8_t *typecode);
 
 /* access to container underneath */
-inline const void *container_unwrap_shared(
+const void *container_unwrap_shared(
     const void *candidate_shared_container, uint8_t *type) {
     if (*type == SHARED_CONTAINER_TYPE_CODE) {
         *type =
@@ -84,7 +84,7 @@ inline const void *container_unwrap_shared(
 
 
 /* access to container underneath */
-inline void *container_mutable_unwrap_shared(
+void *container_mutable_unwrap_shared(
     void *candidate_shared_container, uint8_t *type) {
     if (*type == SHARED_CONTAINER_TYPE_CODE) {
         *type =
@@ -97,7 +97,7 @@ inline void *container_mutable_unwrap_shared(
 }
 
 /* access to container underneath and queries its type */
-static inline uint8_t get_container_type(const void *container, uint8_t type) {
+static uint8_t get_container_type(const void *container, uint8_t type) {
     if (type == SHARED_CONTAINER_TYPE_CODE) {
         return ((const shared_container_t *)container)->typecode;
     } else {
@@ -113,7 +113,7 @@ static inline uint8_t get_container_type(const void *container, uint8_t type) {
 void *container_clone(const void *container, uint8_t typecode);
 
 /* access to container underneath, cloning it if needed */
-static inline void *get_writable_copy_if_shared(
+static void *get_writable_copy_if_shared(
     void *candidate_shared_container, uint8_t *type) {
     if (*type == SHARED_CONTAINER_TYPE_CODE) {
         return shared_container_extract_copy(
@@ -135,7 +135,7 @@ static const char *shared_container_names[] = {
 // if a new container is produced, caller responsible for freeing the previous
 // one
 // container should not be a shared container
-static inline void *container_to_bitset(void *container, uint8_t typecode) {
+static void *container_to_bitset(void *container, uint8_t typecode) {
     bitset_container_t *result = NULL;
     switch (typecode) {
         case BITSET_CONTAINER_TYPE_CODE:
@@ -158,7 +158,7 @@ static inline void *container_to_bitset(void *container, uint8_t typecode) {
 /**
  * Get the container name from the typecode
  */
-static inline const char *get_container_name(uint8_t typecode) {
+static const char *get_container_name(uint8_t typecode) {
     switch (typecode) {
         case BITSET_CONTAINER_TYPE_CODE:
             return container_names[0];
@@ -175,7 +175,7 @@ static inline const char *get_container_name(uint8_t typecode) {
     }
 }
 
-static inline const char *get_full_container_name(const void *container,
+static const char *get_full_container_name(const void *container,
                                                   uint8_t typecode) {
     switch (typecode) {
         case BITSET_CONTAINER_TYPE_CODE:
@@ -210,7 +210,7 @@ static inline const char *get_full_container_name(const void *container,
 /**
  * Get the container cardinality (number of elements), requires a  typecode
  */
-static inline int container_get_cardinality(const void *container,
+static int container_get_cardinality(const void *container,
                                             uint8_t typecode) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
@@ -232,7 +232,7 @@ static inline int container_get_cardinality(const void *container,
 // returns true if a container is known to be full. Note that a lazy bitset
 // container
 // might be full without us knowing
-static inline bool container_is_full(const void *container, uint8_t typecode) {
+static bool container_is_full(const void *container, uint8_t typecode) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
         case BITSET_CONTAINER_TYPE_CODE:
@@ -249,7 +249,7 @@ static inline bool container_is_full(const void *container, uint8_t typecode) {
     return 0;  // unreached
 }
 
-static inline int container_shrink_to_fit(void *container, uint8_t typecode) {
+static int container_shrink_to_fit(void *container, uint8_t typecode) {
     container = container_mutable_unwrap_shared(container, &typecode);
     switch (typecode) {
         case BITSET_CONTAINER_TYPE_CODE:
@@ -267,7 +267,7 @@ static inline int container_shrink_to_fit(void *container, uint8_t typecode) {
 
 /*  Create a container with all the values between in [min,max) at a
     distance k*step from min. */
-static inline void *container_from_range(uint8_t *type, uint32_t min,
+static void *container_from_range(uint8_t *type, uint32_t min,
                                          uint32_t max, uint16_t step) {
     int size;
     if (step == 0) return NULL;  // being paranoid
@@ -294,7 +294,7 @@ static inline void *container_from_range(uint8_t *type, uint32_t min,
 /**
  * "repair" the container after lazy operations.
  */
-static inline void *container_repair_after_lazy(void *container,
+static void *container_repair_after_lazy(void *container,
                                                 uint8_t *typecode) {
     void *result = NULL;
     container = get_writable_copy_if_shared(
@@ -334,7 +334,7 @@ static inline void *container_repair_after_lazy(void *container,
  * container_write(container, buf).
  *
  */
-static inline int32_t container_write(const void *container, uint8_t typecode,
+static int32_t container_write(const void *container, uint8_t typecode,
                                       char *buf) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
@@ -355,7 +355,7 @@ static inline int32_t container_write(const void *container, uint8_t typecode,
  * container_write), requires a
  * typecode
  */
-static inline int32_t container_size_in_bytes(const void *container,
+static int32_t container_size_in_bytes(const void *container,
                                               uint8_t typecode) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
@@ -388,7 +388,7 @@ void container_printf_as_uint32_array(const void *container, uint8_t typecode,
 /**
  * Checks whether a container is not empty, requires a  typecode
  */
-static inline bool container_nonzero_cardinality(const void *container,
+static bool container_nonzero_cardinality(const void *container,
                                                  uint8_t typecode) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
@@ -417,7 +417,7 @@ void container_free(void *container, uint8_t typecode);
  * "base" (most significant values)
  * Returns number of ints added.
  */
-static inline int container_to_uint32_array(uint32_t *output,
+static int container_to_uint32_array(uint32_t *output,
                                             const void *container,
                                             uint8_t typecode, uint32_t base) {
     container = container_unwrap_shared(container, &typecode);
@@ -443,7 +443,7 @@ static inline int container_to_uint32_array(uint32_t *output,
  * This function may allocate a new container, and caller is responsible for
  * memory deallocation
  */
-static inline void *container_add(void *container, uint16_t val,
+static void *container_add(void *container, uint16_t val,
                                   uint8_t typecode, uint8_t *new_typecode) {
     container = get_writable_copy_if_shared(container, &typecode);
     switch (typecode) {
@@ -481,7 +481,7 @@ static inline void *container_add(void *container, uint16_t val,
  * This function may allocate a new container, and caller is responsible for
  * memory deallocation
  */
-static inline void *container_remove(void *container, uint16_t val,
+static void *container_remove(void *container, uint16_t val,
                                      uint8_t typecode, uint8_t *new_typecode) {
     container = get_writable_copy_if_shared(container, &typecode);
     switch (typecode) {
@@ -515,7 +515,7 @@ static inline void *container_remove(void *container, uint16_t val,
 /**
  * Check whether a value is in a container, requires a  typecode
  */
-inline bool container_contains(const void *container, uint16_t val,
+bool container_contains(const void *container, uint16_t val,
                                uint8_t typecode) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
@@ -546,7 +546,7 @@ void *container_deserialize(uint8_t typecode, const char *buf, size_t buf_len);
  * Returns true if the two containers have the same content. Note that
  * two containers having different types can be "equal" in this sense.
  */
-static inline bool container_equals(const void *c1, uint8_t type1,
+static bool container_equals(const void *c1, uint8_t type1,
                                     const void *c2, uint8_t type2) {
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
@@ -597,7 +597,7 @@ static inline bool container_equals(const void *c1, uint8_t type1,
  * Returns true if the container c1 is a subset of the container c2. Note that
  * c1 can be a subset of c2 even if they have a different type.
  */
-static inline bool container_is_subset(const void *c1, uint8_t type1,
+static bool container_is_subset(const void *c1, uint8_t type1,
                                        const void *c2, uint8_t type2) {
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
@@ -648,7 +648,7 @@ static inline bool container_is_subset(const void *c1, uint8_t type1,
  * type result_type), requires a typecode. This allocates new memory, caller
  * is responsible for deallocation.
  */
-static inline void *container_and(const void *c1, uint8_t type1, const void *c2,
+static void *container_and(const void *c1, uint8_t type1, const void *c2,
                                   uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
@@ -735,7 +735,7 @@ static inline void *container_and(const void *c1, uint8_t type1, const void *c2,
 /**
  * Compute the size of the intersection between two containers.
  */
-static inline int container_and_cardinality(const void *c1, uint8_t type1,
+static int container_and_cardinality(const void *c1, uint8_t type1,
                                             const void *c2, uint8_t type2) {
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
@@ -783,7 +783,7 @@ static inline int container_and_cardinality(const void *c1, uint8_t type1,
 /**
  * Check whether two containers intersect.
  */
-static inline bool container_intersect(const void *c1, uint8_t type1, const void *c2,
+static bool container_intersect(const void *c1, uint8_t type1, const void *c2,
                                   uint8_t type2) {
     c1 = container_unwrap_shared(c1, &type1);
     c2 = container_unwrap_shared(c2, &type2);
@@ -840,7 +840,7 @@ static inline bool container_intersect(const void *c1, uint8_t type1, const void
  The type of the first container may change. Returns the modified
  (and possibly new) container.
 */
-static inline void *container_iand(void *c1, uint8_t type1, const void *c2,
+static void *container_iand(void *c1, uint8_t type1, const void *c2,
                                    uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
@@ -930,7 +930,7 @@ static inline void *container_iand(void *c1, uint8_t type1, const void *c2,
  * result_type), requires a typecode. This allocates new memory, caller
  * is responsible for deallocation.
  */
-static inline void *container_or(const void *c1, uint8_t type1, const void *c2,
+static void *container_or(const void *c1, uint8_t type1, const void *c2,
                                  uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
@@ -1039,7 +1039,7 @@ static inline void *container_or(const void *c1, uint8_t type1, const void *c2,
  * This lazy version delays some operations such as the maintenance of the
  * cardinality. It requires repair later on the generated containers.
  */
-static inline void *container_lazy_or(const void *c1, uint8_t type1,
+static void *container_lazy_or(const void *c1, uint8_t type1,
                                       const void *c2, uint8_t type2,
                                       uint8_t *result_type) {
     void *result = NULL;
@@ -1152,7 +1152,7 @@ static inline void *container_lazy_or(const void *c1, uint8_t type1,
  * The type of the first container may change. Returns the modified
  * (and possibly new) container
 */
-static inline void *container_ior(void *c1, uint8_t type1, const void *c2,
+static void *container_ior(void *c1, uint8_t type1, const void *c2,
                                   uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
@@ -1263,7 +1263,7 @@ static inline void *container_ior(void *c1, uint8_t type1, const void *c2,
  * This lazy version delays some operations such as the maintenance of the
  * cardinality. It requires repair later on the generated containers.
 */
-static inline void *container_lazy_ior(void *c1, uint8_t type1, const void *c2,
+static void *container_lazy_ior(void *c1, uint8_t type1, const void *c2,
                                        uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     assert(type1 != SHARED_CONTAINER_TYPE_CODE);
@@ -1379,7 +1379,7 @@ static inline void *container_lazy_ior(void *c1, uint8_t type1, const void *c2,
  * container (having type result_type), requires a typecode. This allocates new
  * memory, caller is responsible for deallocation.
  */
-static inline void *container_xor(const void *c1, uint8_t type1, const void *c2,
+static void *container_xor(const void *c1, uint8_t type1, const void *c2,
                                   uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     c1 = container_unwrap_shared(c1, &type1);
@@ -1469,7 +1469,7 @@ static inline void *container_xor(const void *c1, uint8_t type1, const void *c2,
  * This lazy version delays some operations such as the maintenance of the
  * cardinality. It requires repair later on the generated containers.
  */
-static inline void *container_lazy_xor(const void *c1, uint8_t type1,
+static void *container_lazy_xor(const void *c1, uint8_t type1,
                                        const void *c2, uint8_t type2,
                                        uint8_t *result_type) {
     void *result = NULL;
@@ -1565,7 +1565,7 @@ static inline void *container_lazy_xor(const void *c1, uint8_t type1,
  * The type of the first container may change. Returns the modified
  * (and possibly new) container
 */
-static inline void *container_ixor(void *c1, uint8_t type1, const void *c2,
+static void *container_ixor(void *c1, uint8_t type1, const void *c2,
                                    uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
@@ -1658,7 +1658,7 @@ static inline void *container_ixor(void *c1, uint8_t type1, const void *c2,
  * This lazy version delays some operations such as the maintenance of the
  * cardinality. It requires repair later on the generated containers.
 */
-static inline void *container_lazy_ixor(void *c1, uint8_t type1, const void *c2,
+static void *container_lazy_ixor(void *c1, uint8_t type1, const void *c2,
                                         uint8_t type2, uint8_t *result_type) {
     assert(type1 != SHARED_CONTAINER_TYPE_CODE);
     // c1 = get_writable_copy_if_shared(c1,&type1);
@@ -1689,7 +1689,7 @@ static inline void *container_lazy_ixor(void *c1, uint8_t type1, const void *c2,
  * container (having type result_type), requires a typecode. This allocates new
  * memory, caller is responsible for deallocation.
  */
-static inline void *container_andnot(const void *c1, uint8_t type1,
+static void *container_andnot(const void *c1, uint8_t type1,
                                      const void *c2, uint8_t type2,
                                      uint8_t *result_type) {
     void *result = NULL;
@@ -1798,7 +1798,7 @@ static inline void *container_andnot(const void *c1, uint8_t type1,
  * The type of the first container may change. Returns the modified
  * (and possibly new) container
 */
-static inline void *container_iandnot(void *c1, uint8_t type1, const void *c2,
+static void *container_iandnot(void *c1, uint8_t type1, const void *c2,
                                       uint8_t type2, uint8_t *result_type) {
     void *result = NULL;
     c1 = get_writable_copy_if_shared(c1, &type1);
@@ -1881,7 +1881,7 @@ static inline void *container_iandnot(void *c1, uint8_t type1, const void *c2,
  * to iterator. You need to specify a container and its type.
  * Returns true if the iteration should continue.
  */
-static inline bool container_iterate(const void *container, uint8_t typecode,
+static bool container_iterate(const void *container, uint8_t typecode,
                                      uint32_t base, roaring_iterator iterator,
                                      void *ptr) {
     container = container_unwrap_shared(container, &typecode);
@@ -1904,7 +1904,7 @@ static inline bool container_iterate(const void *container, uint8_t typecode,
     return false;
 }
 
-static inline bool container_iterate64(const void *container, uint8_t typecode,
+static bool container_iterate64(const void *container, uint8_t typecode,
                                        uint32_t base,
                                        roaring_iterator64 iterator,
                                        uint64_t high_bits, void *ptr) {
@@ -1930,7 +1930,7 @@ static inline bool container_iterate64(const void *container, uint8_t typecode,
     return false;
 }
 
-static inline void *container_not(const void *c, uint8_t typ,
+static void *container_not(const void *c, uint8_t typ,
                                   uint8_t *result_type) {
     void *result = NULL;
     c = container_unwrap_shared(c, &typ);
@@ -1961,7 +1961,7 @@ static inline void *container_not(const void *c, uint8_t typ,
     return NULL;
 }
 
-static inline void *container_not_range(const void *c, uint8_t typ,
+static void *container_not_range(const void *c, uint8_t typ,
                                         uint32_t range_start,
                                         uint32_t range_end,
                                         uint8_t *result_type) {
@@ -1996,7 +1996,7 @@ static inline void *container_not_range(const void *c, uint8_t typ,
     return NULL;
 }
 
-static inline void *container_inot(void *c, uint8_t typ, uint8_t *result_type) {
+static void *container_inot(void *c, uint8_t typ, uint8_t *result_type) {
     void *result = NULL;
     c = get_writable_copy_if_shared(c, &typ);
     switch (typ) {
@@ -2028,7 +2028,7 @@ static inline void *container_inot(void *c, uint8_t typ, uint8_t *result_type) {
     return NULL;
 }
 
-static inline void *container_inot_range(void *c, uint8_t typ,
+static void *container_inot_range(void *c, uint8_t typ,
                                          uint32_t range_start,
                                          uint32_t range_end,
                                          uint8_t *result_type) {
@@ -2069,7 +2069,7 @@ static inline void *container_inot_range(void *c, uint8_t typ,
 /* initially always use a run container, even if an array might be
  * marginally
  * smaller */
-static inline void *container_range_of_ones(uint32_t range_start,
+static void *container_range_of_ones(uint32_t range_start,
                                             uint32_t range_end,
                                             uint8_t *result_type) {
     *result_type = RUN_CONTAINER_TYPE_CODE;
@@ -2084,7 +2084,7 @@ static inline void *container_range_of_ones(uint32_t range_start,
  * accordingly.
  * Otherwise, it returns false and update start_rank.
  */
-static inline bool container_select(const void *container, uint8_t typecode,
+static bool container_select(const void *container, uint8_t typecode,
                                     uint32_t *start_rank, uint32_t rank,
                                     uint32_t *element) {
     container = container_unwrap_shared(container, &typecode);
@@ -2107,7 +2107,7 @@ static inline bool container_select(const void *container, uint8_t typecode,
     return false;
 }
 
-static inline uint16_t container_maximum(const void *container,
+static uint16_t container_maximum(const void *container,
                                          uint8_t typecode) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
@@ -2126,7 +2126,7 @@ static inline uint16_t container_maximum(const void *container,
     return false;
 }
 
-static inline uint16_t container_minimum(const void *container,
+static uint16_t container_minimum(const void *container,
                                          uint8_t typecode) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {
@@ -2146,7 +2146,7 @@ static inline uint16_t container_minimum(const void *container,
 }
 
 // number of values smaller or equal to x
-static inline int container_rank(const void *container, uint8_t typecode,
+static int container_rank(const void *container, uint8_t typecode,
                                  uint16_t x) {
     container = container_unwrap_shared(container, &typecode);
     switch (typecode) {

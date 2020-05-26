@@ -82,7 +82,7 @@ static inline void recoverRoomAtIndex(run_container_t *run, uint16_t index) {
 /**
  * Good old binary search through rle data
  */
-inline int32_t interleavedBinarySearch(const rle16_t *array, int32_t lenarray,
+ int32_t interleavedBinarySearch(const rle16_t *array, int32_t lenarray,
                                        uint16_t ikey) {
     int32_t low = 0;
     int32_t high = lenarray - 1;
@@ -110,7 +110,7 @@ void run_container_grow(run_container_t *run, int32_t min, bool copy);
 /**
  * Moves the data so that we can write data at index
  */
-static inline void makeRoomAtIndex(run_container_t *run, uint16_t index) {
+static  void makeRoomAtIndex(run_container_t *run, uint16_t index) {
     /* This function calls realloc + memmove sequentially to move by one index.
      * Potentially copying twice the array.
      */
@@ -125,7 +125,7 @@ static inline void makeRoomAtIndex(run_container_t *run, uint16_t index) {
 bool run_container_add(run_container_t *run, uint16_t pos);
 
 /* Remove `pos' from `run'. Returns true if `pos' was present. */
-static inline bool run_container_remove(run_container_t *run, uint16_t pos) {
+static  bool run_container_remove(run_container_t *run, uint16_t pos) {
     int32_t index = interleavedBinarySearch(run->runs, run->n_runs, pos);
     if (index >= 0) {
         int32_t le = run->runs[index].length;
@@ -164,7 +164,7 @@ static inline bool run_container_remove(run_container_t *run, uint16_t pos) {
 }
 
 /* Check whether `pos' is present in `run'.  */
-inline bool run_container_contains(const run_container_t *run, uint16_t pos) {
+ bool run_container_contains(const run_container_t *run, uint16_t pos) {
     int32_t index = interleavedBinarySearch(run->runs, run->n_runs, pos);
     if (index >= 0) return true;
     index = -index - 2;  // points to preceding value, possibly -1
@@ -180,13 +180,13 @@ inline bool run_container_contains(const run_container_t *run, uint16_t pos) {
 int run_container_cardinality(const run_container_t *run);
 
 /* Card > 0?, see run_container_empty for the reverse */
-static inline bool run_container_nonzero_cardinality(
+static  bool run_container_nonzero_cardinality(
     const run_container_t *run) {
     return run->n_runs > 0;  // runs never empty
 }
 
 /* Card == 0?, see run_container_nonzero_cardinality for the reverse */
-static inline bool run_container_empty(
+static  bool run_container_empty(
     const run_container_t *run) {
     return run->n_runs == 0;  // runs never empty
 }
@@ -197,7 +197,7 @@ static inline bool run_container_empty(
 void run_container_copy(const run_container_t *src, run_container_t *dst);
 
 /* Set the cardinality to zero (does not release memory). */
-static inline void run_container_clear(run_container_t *run) {
+static  void run_container_clear(run_container_t *run) {
     run->n_runs = 0;
 }
 
@@ -211,7 +211,7 @@ static inline void run_container_clear(run_container_t *run) {
  *
  * This is not a safe function, it is meant for performance: use with care.
  */
-static inline void run_container_append(run_container_t *run, rle16_t vl,
+static  void run_container_append(run_container_t *run, rle16_t vl,
                                         rle16_t *previousrl) {
     const uint32_t previousend = previousrl->value + previousrl->length;
     if (vl.value > previousend + 1) {  // we add a new one
@@ -230,7 +230,7 @@ static inline void run_container_append(run_container_t *run, rle16_t vl,
 /**
  * Like run_container_append but it is assumed that the content of run is empty.
  */
-static inline rle16_t run_container_append_first(run_container_t *run,
+static  rle16_t run_container_append_first(run_container_t *run,
                                                  rle16_t vl) {
     run->runs[run->n_runs] = vl;
     run->n_runs++;
@@ -246,7 +246,7 @@ static inline rle16_t run_container_append_first(run_container_t *run,
  *
  * This is not a safe function, it is meant for performance: use with care.
  */
-static inline void run_container_append_value(run_container_t *run,
+static  void run_container_append_value(run_container_t *run,
                                               uint16_t val,
                                               rle16_t *previousrl) {
     const uint32_t previousend = previousrl->value + previousrl->length;
@@ -267,7 +267,7 @@ static inline void run_container_append_value(run_container_t *run,
  * Like run_container_append_value but it is assumed that the content of run is
  * empty.
  */
-static inline rle16_t run_container_append_value_first(run_container_t *run,
+static  rle16_t run_container_append_value_first(run_container_t *run,
                                                        uint16_t val) {
     // rle16_t newrle = (rle16_t){.value = val, .length = 0};// requires C99
     rle16_t newrle;
@@ -281,7 +281,7 @@ static inline rle16_t run_container_append_value_first(run_container_t *run,
 
 /* Check whether the container spans the whole chunk (cardinality = 1<<16).
  * This check can be done in constant time (inexpensive). */
-static inline bool run_container_is_full(const run_container_t *run) {
+static  bool run_container_is_full(const run_container_t *run) {
     rle16_t vl = run->runs[0];
     return (run->n_runs == 1) && (vl.value == 0) && (vl.length == 0xFFFF);
 }
@@ -341,7 +341,7 @@ void run_container_printf_as_uint32_array(const run_container_t *v,
 /**
  * Return the serialized size in bytes of a container having "num_runs" runs.
  */
-static inline int32_t run_container_serialized_size_in_bytes(int32_t num_runs) {
+static  int32_t run_container_serialized_size_in_bytes(int32_t num_runs) {
     return sizeof(uint16_t) +
            sizeof(rle16_t) * num_runs;  // each run requires 2 2-byte entries.
 }
@@ -376,7 +376,7 @@ int32_t run_container_read(int32_t cardinality, run_container_t *container,
  * Return the serialized size in bytes of a container (see run_container_write).
  * This is meant to be compatible with the Java and Go versions of Roaring.
  */
-static inline int32_t run_container_size_in_bytes(
+static  int32_t run_container_size_in_bytes(
     const run_container_t *container) {
     return run_container_serialized_size_in_bytes(container->n_runs);
 }
@@ -408,7 +408,7 @@ void run_container_smart_append_exclusive(run_container_t *src,
 * The cardinality of the created container is stop - start.
 * Returns NULL on failure
 */
-static inline run_container_t *run_container_create_range(uint32_t start,
+static  run_container_t *run_container_create_range(uint32_t start,
                                                           uint32_t stop) {
     run_container_t *rc = run_container_create_given_capacity(1);
     if (rc) {
@@ -437,13 +437,13 @@ void run_container_andnot(const run_container_t *src_1,
                           const run_container_t *src_2, run_container_t *dst);
 
 /* Returns the smallest value (assumes not empty) */
-inline uint16_t run_container_minimum(const run_container_t *run) {
+ uint16_t run_container_minimum(const run_container_t *run) {
     if (run->n_runs == 0) return 0;
     return run->runs[0].value;
 }
 
 /* Returns the largest value (assumes not empty) */
-inline uint16_t run_container_maximum(const run_container_t *run) {
+ uint16_t run_container_maximum(const run_container_t *run) {
     if (run->n_runs == 0) return 0;
     return run->runs[run->n_runs - 1].value + run->runs[run->n_runs - 1].length;
 }
@@ -452,7 +452,7 @@ inline uint16_t run_container_maximum(const run_container_t *run) {
 int run_container_rank(const run_container_t *arr, uint16_t x);
 
 /* Returns the index of the first run containing a value at least as large as x, or -1 */
-inline int run_container_index_equalorlarger(const run_container_t *arr, uint16_t x) {
+ int run_container_index_equalorlarger(const run_container_t *arr, uint16_t x) {
     int32_t index = interleavedBinarySearch(arr->runs, arr->n_runs, x);
     if (index >= 0) return index;
     index = -index - 2;  // points to preceding run, possibly -1

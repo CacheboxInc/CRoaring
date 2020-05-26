@@ -241,7 +241,7 @@ void roaring_bitmap_remove(roaring_bitmap_t *r, uint32_t x);
 /**
  * Check if value x is present
  */
-inline bool roaring_bitmap_contains(const roaring_bitmap_t *r, uint32_t val) {
+bool roaring_bitmap_contains(const roaring_bitmap_t *r, uint32_t val) {
     uint8_t typecode;
     void *container;
     const uint16_t hb = val >> 16;
@@ -415,7 +415,7 @@ bool roaring_bitmap_is_subset(const roaring_bitmap_t *ra1,
  * greater
  * than ra1.
  */
-inline bool roaring_bitmap_is_strict_subset(const roaring_bitmap_t *ra1,
+bool roaring_bitmap_is_strict_subset(const roaring_bitmap_t *ra1,
                                             const roaring_bitmap_t *ra2) {
     return (roaring_bitmap_get_cardinality(ra2) >
                 roaring_bitmap_get_cardinality(ra1) &&
