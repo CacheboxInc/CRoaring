@@ -300,7 +300,7 @@ static inline bool array_container_remove(array_container_t *arr,
 }
 
 /* Check whether x is present.  */
-inline bool array_container_contains(const array_container_t *arr,
+static inline bool array_container_contains(const array_container_t *arr,
                                      uint16_t pos) {
     //    return binarySearch(arr->array, arr->cardinality, pos) >= 0;
     // binary search with fallback to linear search for short ranges
@@ -334,19 +334,19 @@ inline bool array_container_contains(const array_container_t *arr,
 }
 
 /* Returns the smallest value (assumes not empty) */
-inline uint16_t array_container_minimum(const array_container_t *arr) {
+static inline uint16_t array_container_minimum(const array_container_t *arr) {
     if (arr->cardinality == 0) return 0;
     return arr->array[0];
 }
 
 /* Returns the largest value (assumes not empty) */
-inline uint16_t array_container_maximum(const array_container_t *arr) {
+static inline uint16_t array_container_maximum(const array_container_t *arr) {
     if (arr->cardinality == 0) return 0;
     return arr->array[arr->cardinality - 1];
 }
 
 /* Returns the number of values equal or smaller than x */
-inline int array_container_rank(const array_container_t *arr, uint16_t x) {
+static inline int array_container_rank(const array_container_t *arr, uint16_t x) {
     const int32_t idx = binarySearch(arr->array, arr->cardinality, x);
     const bool is_present = idx >= 0;
     if (is_present) {
@@ -357,7 +357,7 @@ inline int array_container_rank(const array_container_t *arr, uint16_t x) {
 }
 
 /* Returns the index of the first value equal or smaller than x, or -1 */
-inline int array_container_index_equalorlarger(const array_container_t *arr, uint16_t x) {
+static inline int array_container_index_equalorlarger(const array_container_t *arr, uint16_t x) {
     const int32_t idx = binarySearch(arr->array, arr->cardinality, x);
     const bool is_present = idx >= 0;
     if (is_present) {

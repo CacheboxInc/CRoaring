@@ -82,7 +82,7 @@ static inline void recoverRoomAtIndex(run_container_t *run, uint16_t index) {
 /**
  * Good old binary search through rle data
  */
-inline int32_t interleavedBinarySearch(const rle16_t *array, int32_t lenarray,
+static inline int32_t interleavedBinarySearch(const rle16_t *array, int32_t lenarray,
                                        uint16_t ikey) {
     int32_t low = 0;
     int32_t high = lenarray - 1;
@@ -164,7 +164,7 @@ static inline bool run_container_remove(run_container_t *run, uint16_t pos) {
 }
 
 /* Check whether `pos' is present in `run'.  */
-inline bool run_container_contains(const run_container_t *run, uint16_t pos) {
+static inline bool run_container_contains(const run_container_t *run, uint16_t pos) {
     int32_t index = interleavedBinarySearch(run->runs, run->n_runs, pos);
     if (index >= 0) return true;
     index = -index - 2;  // points to preceding value, possibly -1
@@ -437,13 +437,13 @@ void run_container_andnot(const run_container_t *src_1,
                           const run_container_t *src_2, run_container_t *dst);
 
 /* Returns the smallest value (assumes not empty) */
-inline uint16_t run_container_minimum(const run_container_t *run) {
+static inline uint16_t run_container_minimum(const run_container_t *run) {
     if (run->n_runs == 0) return 0;
     return run->runs[0].value;
 }
 
 /* Returns the largest value (assumes not empty) */
-inline uint16_t run_container_maximum(const run_container_t *run) {
+static inline uint16_t run_container_maximum(const run_container_t *run) {
     if (run->n_runs == 0) return 0;
     return run->runs[run->n_runs - 1].value + run->runs[run->n_runs - 1].length;
 }
@@ -452,7 +452,7 @@ inline uint16_t run_container_maximum(const run_container_t *run) {
 int run_container_rank(const run_container_t *arr, uint16_t x);
 
 /* Returns the index of the first run containing a value at least as large as x, or -1 */
-inline int run_container_index_equalorlarger(const run_container_t *arr, uint16_t x) {
+static inline int run_container_index_equalorlarger(const run_container_t *arr, uint16_t x) {
     int32_t index = interleavedBinarySearch(arr->runs, arr->n_runs, x);
     if (index >= 0) return index;
     index = -index - 2;  // points to preceding run, possibly -1
